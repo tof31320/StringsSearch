@@ -1,7 +1,19 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2016 Christophe Leblond
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package org.tof.stringssearch;
 
@@ -9,20 +21,30 @@ import java.io.Serializable;
 import java.util.Random;
 
 /**
- * IndexEntry.java
- 
- Todo
- *
- * @author Christophe <christophe.leblond@inp-toulouse.fr>
+ * Modélise une entrée de l'index
+ * 
+ * @author Christophe Leblond
  */
 public class IndexEntry implements Serializable {
 
+    /**
+     * Identifiant unique
+     */
     private long id = 0;
     
+    /**
+     * Les tokens qui sont utilisés dans la recherche
+     */
     private String[] tokens = null;
     
+    /**
+     * L'objet associé à cette entrée
+     */
     private Object datas = null;
     
+    /**
+     * Nombre de caractères total de tous les tokens 
+     */
     private int totalLength = 0;
     
     public IndexEntry(long id){
@@ -66,6 +88,10 @@ public class IndexEntry implements Serializable {
         this.totalLength = totalLength;
     }
     
+    /**
+     * Calcule le nombre de caractères total des tokens 
+     * (utilisé par le moteur de recherche)
+     */
     public void calc(){
         totalLength = 0;
         for(int i = 0; i < tokens.length; i++){
@@ -73,15 +99,16 @@ public class IndexEntry implements Serializable {
         }
     }
     
-    /*public boolean containsToken(String token) {
-        for(int i = 0; i < getTokens().length; i++){
-            if(getTokens()[i].contains(token)){
-                return true;
-            }
-        }
-        return false;
-    }*/
-    
+    /**
+     * Se charge de calculer le score de pertinence de l'entrée par rapport
+     * à un token de la requête 
+     * 
+     * @param qr le résultat associé
+     * @param queryToken le token de la requête 
+     * @param query la requête
+     * 
+     * @return score
+     */
     public double scoreOfToken(QueryResult qr, String queryToken, Query query){
         
         double score = 0.0;
