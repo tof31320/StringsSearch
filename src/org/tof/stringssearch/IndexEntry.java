@@ -40,7 +40,7 @@ public class IndexEntry implements Serializable {
     /**
      * L'objet associé à cette entrée
      */
-    private Object datas = null;
+    private Indexable datas = null;
     
     /**
      * Nombre de caractères total de tous les tokens 
@@ -51,7 +51,7 @@ public class IndexEntry implements Serializable {
         this.id = id;
     }
     
-    public IndexEntry(long id, Object datas){
+    public IndexEntry(long id, Indexable datas){
         this(id);
         this.datas = datas;
     }
@@ -72,11 +72,11 @@ public class IndexEntry implements Serializable {
         this.tokens = tokens;
     }
 
-    public Object getDatas() {
+    public Indexable getDatas() {
         return datas;
     }
 
-    public void setDatas(Object datas) {
+    public void setDatas(Indexable datas) {
         this.datas = datas;
     }
 
@@ -119,20 +119,20 @@ public class IndexEntry implements Serializable {
             
             if(token.equals(queryToken)){
                 // token exact trouvé => score maxi
-                score += 1.0;
+                score += query.getExactTokenScore();
                 
             }else if(token.contains(queryToken)){
                 // token trouvé dans le contenu => 90% du score max
-                score += 0.9;
+                score += query.getContainsTokenScore();
                 
             }else{
                 // Tente une approximation sur 60%
                 double dist = (double) DamerauLevenshteinAlgorithm.getInstance().execute(token, queryToken);
                 
-                double distantMax = 3.0;
+                double distantMax = query.getFuzzyDistanceMaximum();
                 
                 if(dist < distantMax){
-                    score += 0.6 * (1.0 - dist / distantMax);
+                    score += query.getFuzzyTokenScore() * (1.0 - dist / distantMax);
                 }
             }
         }

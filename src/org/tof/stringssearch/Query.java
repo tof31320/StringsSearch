@@ -17,7 +17,9 @@
  */
 package org.tof.stringssearch;
 
+import org.tof.stringssearch.analyser.SimpleAnalyser;
 import java.io.Serializable;
+import org.tof.stringssearch.analyser.Analyser;
 
 /**
  * Modélise une requête au moteur de recherche
@@ -51,13 +53,31 @@ public class Query implements Serializable {
      * 
      * Défaut: 1.0
      */
-    public double scoreMin = 0.5;
+    private double scoreMin = 0.5;
+    
+    /**
+     * Pondération du score obtenu par un token qui correspond exactement à un autre (100%)
+     */
+    private double exactTokenScore = 1.0;
+    
+    /**
+     * Pondération du score obtenu par un token contenu dans un autre  (90%)
+     */
+    private double containsTokenScore = 0.9;
+    
+    /**
+     * Pondération du score lorsque le token est assez proche orthographiquement (60%)
+     */
+    private double fuzzyTokenScore = 0.6;
+    
+    /** La distance maxi entre deux tokens ok */
+    private double fuzzyDistanceMaximum = 3.0;
 
     public Query(String q){
-        this(q, new Analyser());
+        this(q, new SimpleAnalyser());
     }
     
-    public Query(String q, Analyser analyser){
+    public Query(String q, SimpleAnalyser analyser){
         this.analyser = analyser;
         this.raw = q;
         this.tokens = analyser.analyse(q);
@@ -102,12 +122,44 @@ public class Query implements Serializable {
     public void setTotalLength(double totalLength) {
         this.totalLength = totalLength;
     }
+
+    public double getFuzzyDistanceMaximum() {
+        return fuzzyDistanceMaximum;
+    }
+
+    public void setFuzzyDistanceMaximum(double fuzzyDistanceMaximum) {
+        this.fuzzyDistanceMaximum = fuzzyDistanceMaximum;
+    }
     
     public void calc(){
         totalLength = 0;
         for(int i = 0; i < tokens.length; i++){
             totalLength += tokens[i].length();
         }
+    }
+
+    public double getExactTokenScore() {
+        return exactTokenScore;
+    }
+
+    public void setExactTokenScore(double exactTokenScore) {
+        this.exactTokenScore = exactTokenScore;
+    }
+
+    public double getContainsTokenScore() {
+        return containsTokenScore;
+    }
+
+    public void setContainsTokenScore(double containsTokenScore) {
+        this.containsTokenScore = containsTokenScore;
+    }
+
+    public double getFuzzyTokenScore() {
+        return fuzzyTokenScore;
+    }
+
+    public void setFuzzyTokenScore(double fuzzyTokenScore) {
+        this.fuzzyTokenScore = fuzzyTokenScore;
     }
 
     @Override

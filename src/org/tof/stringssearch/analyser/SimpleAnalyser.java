@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package org.tof.stringssearch;
+package org.tof.stringssearch.analyser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +25,12 @@ import java.util.List;
  * 
  * @author Christophe Leblond
  */
-public class Analyser {
+public class SimpleAnalyser implements Analyser {
 
     /** Les tokens à exclure de l'analyse */
     public List<String> tokensToExcludes = null;
     
-    public Analyser(){
+    public SimpleAnalyser(){
         tokensToExcludes = new ArrayList<>();
     }
 

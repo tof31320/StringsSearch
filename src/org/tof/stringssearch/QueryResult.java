@@ -72,6 +72,10 @@ public class QueryResult implements Serializable {
     public void setIndexEntry(IndexEntry indexEntry) {
         this.indexEntry = indexEntry;
     }
+    
+    public Indexable getIndexable(){
+        return indexEntry.getDatas();
+    }
 
     @Override
     public String toString() {

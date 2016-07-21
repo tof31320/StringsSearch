@@ -17,12 +17,14 @@ package org.tof.stringssearch;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+import org.tof.stringssearch.analyser.SimpleAnalyser;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
+import org.tof.stringssearch.analyser.Analyser;
 
 /**
  * L'Index est crée à partir d'un ensemble de données sur lesquelles on souhaite
@@ -50,7 +52,7 @@ public class Index implements Serializable {
     
     public Index(){
         random = new Random();
-        analyser = new Analyser();
+        analyser = new SimpleAnalyser();
     }
 
     public Analyser getAnalyser() {
@@ -75,13 +77,12 @@ public class Index implements Serializable {
     /**
      * Ajoute une nouvelle entrée à l'index:
      * 
-     * @param fieldValue les données que l'on souhaite indexées (et qui seront utilisées par le moteur de recherche)
-     * @param datas l'objet associé à cette entrée
+     * @param indexable l'objet associé à cette entrée
      */
-    public void addEntry(String fieldValue, Object datas){
+    public void addEntry(Indexable indexable){
         IndexEntry entry = new IndexEntry(random.nextLong());
-        entry.setTokens(getAnalyser().analyse(fieldValue));
-        entry.setDatas(datas);
+        entry.setTokens(getAnalyser().analyse(indexable.getIndexValue()));
+        entry.setDatas(indexable);
         
         entry.calc();
         
