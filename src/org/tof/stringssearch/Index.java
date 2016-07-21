@@ -1,35 +1,58 @@
 package org.tof.stringssearch;
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2016 Christophe Leblond
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+import org.tof.stringssearch.analyser.SimpleAnalyser;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
+import org.tof.stringssearch.analyser.Analyser;
 
 /**
- * Index.java
+ * L'Index est crée à partir d'un ensemble de données sur lesquelles on souhaite
+ * effectuer des recherche.
  * 
- * Todo
- *
- * @author Christophe <christophe.leblond@inp-toulouse.fr>
+ * @author Christophe Leblond
  */
 public class Index implements Serializable {
 
+    /**
+     * Les différentes entrées que contient l'index
+     */
     private List<IndexEntry> entries = null;
     
+    /**
+     * L'analyseur de chaine qui est utilisé lors de l'ajout d'une nouvelle entrée
+     * 
+     */
     private Analyser analyser = null;
     
+    /**
+     * Sert uniquement pour générer des id uniques d'entrée
+     */
     private Random random = null;
     
     public Index(){
         random = new Random();
-        analyser = new Analyser();
+        analyser = new SimpleAnalyser();
     }
 
     public Analyser getAnalyser() {
@@ -51,29 +74,29 @@ public class Index implements Serializable {
         this.entries = entries;
     }
     
-    public void addEntry(String fieldValue, Object datas){
+    /**
+     * Ajoute une nouvelle entrée à l'index:
+     * 
+     * @param indexable l'objet associé à cette entrée
+     */
+    public void addEntry(Indexable indexable){
         IndexEntry entry = new IndexEntry(random.nextLong());
-        entry.setTokens(getAnalyser().analyse(fieldValue));
-        entry.setDatas(datas);
+        entry.setTokens(getAnalyser().analyse(indexable.getIndexValue()));
+        entry.setDatas(indexable);
         
         entry.calc();
         
         getEntries().add(entry);
-        
-        //System.out.println("Add: " + entry);
     }
     
-    /*public static double scoreOf(IndexEntry entry, Query q){
-        double score = 0.0;
-        // combien de tokens de la query retrouve t on dans l'entrée ?
-        for(int i = 0; i < q.getTokens().length; i++){
-            if(entry.containsToken(q.getTokens()[i])){
-                score += (double) q.getTokens()[i].length() / (double) q.getTotalLength();
-            }
-        }
-        return score;
-    }*/
-    
+    /**
+     * Calcule le résultat d'une entrée en fonction d'une requête
+     * 
+     * @param entry l'entrée à calculer
+     * @param q la requête 
+     * 
+     * @return le résultat
+     */
     public static QueryResult getQueryResultOf(IndexEntry entry, Query q){
         
         QueryResult qr = new QueryResult(entry);
@@ -85,6 +108,12 @@ public class Index implements Serializable {
         return qr;
     }
     
+    /**
+     * Se charge de trier les résultats en fonction de leur score DESC 
+     * et si scores égaux, de leurs objets associés (toString())
+     * 
+     * @param results les résultats triés
+     */
     public static void sortResults(List<QueryResult> results){
         Collections.sort(results, new Comparator<QueryResult>(){
             
@@ -99,6 +128,13 @@ public class Index implements Serializable {
         });
     }
     
+    /**
+     * Effectue une recherche pour la requête q sur la totalité des entrées de l'index
+     * 
+     * @param q la requête 
+     * 
+     * @return les résultats triés
+     */
     public List<QueryResult> search(Query q){
         
         q.calc();
