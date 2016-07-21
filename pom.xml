@@ -4,7 +4,7 @@
 
     <groupId>org.tof.stringssearch</groupId>
     <artifactId>strings-search</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
     <packaging>jar</packaging>
 
     <name>StringsSearch</name>
