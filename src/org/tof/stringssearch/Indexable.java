@@ -24,12 +24,12 @@ package org.tof.stringssearch;
  *
  * @author Christophe Leblond
  */
-public interface Indexable {
+public interface Indexable<T> {
 
     /**
      * Représente la chaine qui va être analysée par le moteur de recherche
      * 
      * @return chaine de caractère 
      */
-    public String getIndexValue();
+    public String getIndexValue(T obj);
 }

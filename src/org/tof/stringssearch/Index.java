@@ -32,7 +32,7 @@ import org.tof.stringssearch.analyser.Analyser;
  * 
  * @author Christophe Leblond
  */
-public class Index implements Serializable {
+public class Index<T> implements Serializable {
 
     /**
      * Les différentes entrées que contient l'index
@@ -49,6 +49,8 @@ public class Index implements Serializable {
      * Sert uniquement pour générer des id uniques d'entrée
      */
     private Random random = null;
+    
+    private Indexable<T> indexer;
     
     public Index(){
         random = new Random();
@@ -73,16 +75,28 @@ public class Index implements Serializable {
     public void setEntries(List<IndexEntry> entries) {
         this.entries = entries;
     }
+
+    public Indexable<T> getIndexer() {
+        return indexer;
+    }
+
+    public void setIndexer(Indexable<T> indexer) {
+        this.indexer = indexer;
+    }
     
     /**
      * Ajoute une nouvelle entrée à l'index:
      * 
      * @param indexable l'objet associé à cette entrée
      */
-    public void addEntry(Indexable indexable){
+    public void addEntry(T obj){
         IndexEntry entry = new IndexEntry(random.nextLong());
-        entry.setTokens(getAnalyser().analyse(indexable.getIndexValue()));
-        entry.setDatas(indexable);
+        if(indexer != null){
+            entry.setTokens(getAnalyser().analyse(indexer.getIndexValue(obj)));
+        }else{
+            entry.setTokens(getAnalyser().analyse(obj.toString()));
+        }
+        entry.setDatas(obj);
         
         entry.calc();
         

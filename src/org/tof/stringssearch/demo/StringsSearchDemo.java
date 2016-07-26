@@ -46,14 +46,21 @@ public class StringsSearchDemo {
         
         // Création du moteur de recherche ...
         // configuration par défaut
-        StringsSearch search = new StringsSearch(); 
+        StringsSearch<Etablissement> search = new StringsSearch<>(); 
+        search.setIndexer(new Indexable<Etablissement>() {
+
+            @Override
+            public String getIndexValue(Etablissement obj) {
+                return obj.getNom();
+            }
+        });
         search.setIndexables(etablissements);
         
         // Requêtage ..
-        List<Indexable> results = search.search("pierre fermma");
+        List<Etablissement> results = search.search("0310024");
         
         // Affiche les résultats
-        for(Indexable e : results){
+        for(Etablissement e : results){
             System.out.println("=> " + e);
         }
     }

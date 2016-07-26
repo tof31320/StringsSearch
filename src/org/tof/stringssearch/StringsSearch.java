@@ -32,12 +32,12 @@ import org.tof.stringssearch.demo.Etablissement;
  *
  * @author Christophe Leblond
  */
-public class StringsSearch {
+public class StringsSearch<T> {
 
-    private Index index = null;
+    private Index<T> index = null;
     
     // Les données sur lesquelles vont porter les recherches
-    private Collection<Indexable> indexables = null;
+    private Collection<T> indexables = null;
     
     // Configuration
     public Analyser analyser = null;
@@ -85,8 +85,20 @@ public class StringsSearch {
     public void setIndex(Index index) {
         this.index = index;
     }
+    
+    public Indexable getIndexer(){
+        if(index != null){
+            return index.getIndexer();
+        }else{
+            return null;
+        }
+    }
+    
+    public void setIndexer(Indexable<T> indexer){
+        index.setIndexer(indexer);
+    }
 
-    public Collection<Indexable> getIndexables() {
+    public Collection<T> getIndexables() {
         if(indexables == null){
             indexables = new ArrayList<>();
         }
@@ -103,9 +115,9 @@ public class StringsSearch {
         
         index.getEntries().clear();
         
-        Iterator<Indexable> iti = getIndexables().iterator();
+        Iterator<T> iti = getIndexables().iterator();
         while(iti.hasNext()){            
-            Indexable indexable = iti.next();
+            T indexable = iti.next();
             
             index.addEntry(indexable);
         }
@@ -171,9 +183,9 @@ public class StringsSearch {
         return query;
     }
     
-    public List<Indexable> search(String q){
+    public List<T> search(String q){
         
-        List<Indexable> results = new ArrayList<>();
+        List<T> results = new ArrayList<>();
         
         Query query = createQuery(q);
         
@@ -182,7 +194,7 @@ public class StringsSearch {
         Iterator<QueryResult> itr = queryResults.iterator();
         QueryResult qr = null;
         while(itr.hasNext()){
-            results.add(itr.next().getIndexable());
+            results.add((T) itr.next().getIndexable());
         }
         
         return results;

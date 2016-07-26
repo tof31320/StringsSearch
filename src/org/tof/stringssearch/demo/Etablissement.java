@@ -15,7 +15,7 @@ import org.tof.stringssearch.Indexable;
  *
  * @author Christophe <christophe.leblond@inp-toulouse.fr>
  */
-public class Etablissement implements Indexable, Serializable {
+public class Etablissement implements Serializable {
 
     private String uai = null;
     
@@ -48,10 +48,5 @@ public class Etablissement implements Indexable, Serializable {
     @Override
     public String toString() {
         return uai + " - " + nom;
-    }
-
-    @Override
-    public String getIndexValue() {
-        return getNom();
-    }
+    }   
 }

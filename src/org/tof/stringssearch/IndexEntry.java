@@ -40,7 +40,7 @@ public class IndexEntry implements Serializable {
     /**
      * L'objet associé à cette entrée
      */
-    private Indexable datas = null;
+    private Object datas = null;
     
     /**
      * Nombre de caractères total de tous les tokens 
@@ -51,7 +51,7 @@ public class IndexEntry implements Serializable {
         this.id = id;
     }
     
-    public IndexEntry(long id, Indexable datas){
+    public IndexEntry(long id, Object datas){
         this(id);
         this.datas = datas;
     }
@@ -72,11 +72,11 @@ public class IndexEntry implements Serializable {
         this.tokens = tokens;
     }
 
-    public Indexable getDatas() {
+    public Object getDatas() {
         return datas;
     }
 
-    public void setDatas(Indexable datas) {
+    public void setDatas(Object datas) {
         this.datas = datas;
     }
 

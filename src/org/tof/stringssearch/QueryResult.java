@@ -73,7 +73,7 @@ public class QueryResult implements Serializable {
         this.indexEntry = indexEntry;
     }
     
-    public Indexable getIndexable(){
+    public Object getIndexable(){
         return indexEntry.getDatas();
     }
 
