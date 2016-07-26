@@ -13,7 +13,7 @@ import org.tof.stringssearch.Indexable;
  * 
  * Todo
  *
- * @author Christophe <christophe.leblond@inp-toulouse.fr>
+ * @author Christophe leblond
  */
 public class Etablissement implements Indexable, Serializable {
 
